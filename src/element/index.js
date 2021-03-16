@@ -1,5 +1,5 @@
 // 导入自己需要的组件
-import { Select, Option, OptionGroup, Input, Tree, Dialog, Row, Col , Form, FormItem,Container,Main,Loading,Header,
+import { Select, Option, OptionGroup, Input, Tree, Dialog, Row, Col , Form, FormItem,Container,Main,Loading,Header,Footer,
     Checkbox,
     CheckboxButton,
     CheckboxGroup,
@@ -7,7 +7,7 @@ import { Select, Option, OptionGroup, Input, Tree, Dialog, Row, Col , Form, Form
     TimeSelect,
     TimePicker,
     Button,Table,
-    TableColumn,InfiniteScroll} from 'element-ui'
+    TableColumn,InfiniteScroll,Avatar} from 'element-ui'
 const element = {
   install: function (Vue) {
     Vue.use(Select)
@@ -22,6 +22,7 @@ const element = {
     Vue.use(FormItem)
     Vue.use(Container)
     Vue.use(Main)
+    Vue.use(Footer)
     Vue.use(Loading)
     Vue.use(Header)
     Vue.use(Checkbox)
@@ -34,6 +35,7 @@ const element = {
     Vue.use(Table)
     Vue.use(TableColumn)
     Vue.use(InfiniteScroll)
+    Vue.use(Avatar)
   }
 }
 export default element

@@ -42,7 +42,7 @@ export default {
     },
     methods:{
         onLogin(){
-
+            this.$router.push('/index')
         }
     }
 }

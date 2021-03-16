@@ -3,6 +3,7 @@ import Router from "vue-router";
 import config from "@/api/config";
 //管理员路径
 const Login = () => import("@/views/admin/login");
+const Index = () => import("@/views/admin/index");
 
 const originalPush = Router.prototype.push;
 Router.prototype.push = function push(location) {
@@ -26,6 +27,12 @@ const router = new Router({
 			path: "/login",
 			name: "login",
 			component: Login,
+			meta: { keepAlive: false }
+		},
+		{
+			path: "/index",
+			name: "index",
+			component: Index,
 			meta: { keepAlive: false }
 		}
 	]
