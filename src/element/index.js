@@ -1,5 +1,8 @@
 // 导入自己需要的组件
 import { Select, Option, OptionGroup, Input, Tree, Dialog, Row, Col , Form, FormItem,Container,Main,Loading,Header,
+    Checkbox,
+    CheckboxButton,
+    CheckboxGroup,
     DatePicker,
     TimeSelect,
     TimePicker,
@@ -21,6 +24,9 @@ const element = {
     Vue.use(Main)
     Vue.use(Loading)
     Vue.use(Header)
+    Vue.use(Checkbox)
+    Vue.use(CheckboxButton)
+    Vue.use(CheckboxGroup)
     Vue.use(DatePicker)
     Vue.use(TimeSelect)
     Vue.use(TimePicker)
