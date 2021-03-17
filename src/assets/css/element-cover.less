@@ -1,0 +1,39 @@
+@import 'color.less';
+// 对话框限制最大宽
+.el-dialog {
+    overflow: hidden;
+    width: 55%;
+    /* max-width: 640px; */
+
+    .el-form-item {
+        width: 85%;
+        min-width: 14.25rem;
+    }
+}
+
+// dialog统一风格
+.el-dialog__header {
+    background: @main;
+    // padding-bottom: 0.8rem;
+    // padding: 1rem;
+    line-height: 1rem;
+    span,
+    i.el-dialog__close {
+        color: #fff;
+
+        &:hover {
+            color: #fff;
+        }
+    }
+}
+
+// 为了里面是form的时候，底部留白不那么大，利用外边距塌陷
+.el-dialog__body {
+    padding-bottom: 0;
+    margin-bottom: 30px;
+}
+
+.el-dialog__footer {
+    border-top: solid 1px @border;
+    padding: 10px;
+}

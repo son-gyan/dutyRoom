@@ -1,0 +1,30 @@
+/* 主题颜色 */
+.el-dialog {
+  overflow: hidden;
+  width: 55%;
+  /* max-width: 640px; */
+}
+.el-dialog .el-form-item {
+  width: 85%;
+  min-width: 14.25rem;
+}
+.el-dialog__header {
+  background: #409EFF;
+  line-height: 1rem;
+}
+.el-dialog__header span,
+.el-dialog__header i.el-dialog__close {
+  color: #fff;
+}
+.el-dialog__header span:hover,
+.el-dialog__header i.el-dialog__close:hover {
+  color: #fff;
+}
+.el-dialog__body {
+  padding-bottom: 0;
+  margin-bottom: 30px;
+}
+.el-dialog__footer {
+  border-top: solid 1px #d3d3d3;
+  padding: 10px;
+}

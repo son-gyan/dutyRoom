@@ -6,10 +6,12 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 import store from './store'
+
 import api from './api'
 Vue.use(api)
 Es6Promise.polyfill()
 import 'element-ui/lib/theme-chalk/index.css'; 
+import '@/assets/css/element-cover.less'
 import element from './element/index'
 Vue.use(element)
 Vue.config.productionTip = false

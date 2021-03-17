@@ -1,11 +1,11 @@
 <template>
     <div clsss="flex">
         <div class="head">
-            <el-avatar :size="40" src="https://empty" class="pointer">
+            <el-avatar :size="40" class="pointer">
                 <img src="https://cube.elemecdn.com/e/fd/0fc7d20532fdaf769a25683617711png.png"/>
             </el-avatar>
             <span class="username">admin</span>
-            <img class="setting" src="../../assets/images/iconfont-setting.png" @click="dialogVisible = true" />
+            <img class="settingImg" src="../../assets/images/iconfont-setting.png" @click="jumpTo"  v-show="!showTag" /> 
             <img class="pointer" src="../../assets/images/signOut.png" @click="dialogVisible = true" />
         </div>
         <p class="time">2020年12月23日 12:23:36</p>
@@ -24,6 +24,11 @@
 <script>
 import { mapState, mapGetters} from 'vuex'
 export default {
+    props: {
+        showTag:{
+            type: Boolean
+        }
+    },
     data() {
         return {
             userName: "123",
@@ -35,6 +40,9 @@ export default {
         ...mapGetters(['userInfo'])
     },
     methods: {
+        jumpTo(){
+            this.$router.push('/setting')
+        },
         loginOut(){
             this.$api.common.loginOut().then((res)=>{
                 if (res.data.resCode == 0) {
@@ -67,7 +75,7 @@ export default {
     .username{
         margin-right:10px;
     }
-    .setting{
+    .settingImg{
         max-width: 20px;
         margin-right:10px;
         vertical-align: middle;

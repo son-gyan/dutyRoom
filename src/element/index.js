@@ -1,5 +1,5 @@
 // 导入自己需要的组件
-import { Select, Option, OptionGroup, Input, Tree, Dialog, Row, Col , Form, FormItem,Container,Main,Loading,Header,Footer,
+import { Select, Option, OptionGroup, Input, Tree, Dialog, Row, Col , Form, FormItem,Container,Main,Loading,Header,Footer,Switch,
     Checkbox,
     CheckboxButton,
     CheckboxGroup,
@@ -25,6 +25,7 @@ const element = {
     Vue.use(Footer)
     Vue.use(Loading)
     Vue.use(Header)
+    Vue.use(Switch)
     Vue.use(Checkbox)
     Vue.use(CheckboxButton)
     Vue.use(CheckboxGroup)

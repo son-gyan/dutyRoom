@@ -4,6 +4,7 @@ import config from "@/api/config";
 //管理员路径
 const Login = () => import("@/views/admin/login");
 const Index = () => import("@/views/admin/index");
+const Setting = () => import("@/views/admin/setting");
 
 const originalPush = Router.prototype.push;
 Router.prototype.push = function push(location) {
@@ -33,8 +34,17 @@ const router = new Router({
 			path: "/index",
 			name: "index",
 			component: Index,
-			meta: { keepAlive: false }
-		}
+			meta: { keepAlive: false },
+			children:[
+				{
+					path: "/setting",
+					name: "setting",
+					component: Setting,
+					meta: { keepAlive: false }
+				},
+			]
+		},
+		
 	]
 });
 
