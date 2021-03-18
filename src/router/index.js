@@ -3,6 +3,7 @@ import Router from "vue-router";
 import config from "@/api/config";
 //管理员路径
 const Login = () => import("@/views/admin/login");
+const Home = () => import("@/views/admin/Home");
 const Index = () => import("@/views/admin/index");
 const Setting = () => import("@/views/admin/setting");
 
@@ -31,11 +32,17 @@ const router = new Router({
 			meta: { keepAlive: false }
 		},
 		{
-			path: "/index",
-			name: "index",
-			component: Index,
+			path: "/home",
+			name: "home",
+			component: Home,
 			meta: { keepAlive: false },
 			children:[
+				{
+					path: "/index",
+					name: "index",
+					component: Index,
+					meta: { keepAlive: false },
+				},
 				{
 					path: "/setting",
 					name: "setting",

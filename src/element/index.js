@@ -1,5 +1,5 @@
 // 导入自己需要的组件
-import { Select, Option, OptionGroup, Input, Tree, Dialog, Row, Col , Form, FormItem,Container,Main,Loading,Header,Footer,Switch,
+import { Select, Option, OptionGroup, Input, Tree, Dialog, Row, Col , Form, FormItem,Container,Main,Loading,Header,Footer,Switch,Card,Image,
     Checkbox,
     CheckboxButton,
     CheckboxGroup,
@@ -37,6 +37,8 @@ const element = {
     Vue.use(TableColumn)
     Vue.use(InfiniteScroll)
     Vue.use(Avatar)
+    Vue.use(Card)
+    Vue.use(Image)
   }
 }
 export default element
