@@ -135,7 +135,7 @@ export default {
     .indexPage{
         height:100%;
         /deep/ .elCard{
-            height:390px;
+            max-height:390px;
             .el-card__body{
                 padding: 0;
                 .qrImg{
