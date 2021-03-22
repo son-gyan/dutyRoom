@@ -6,11 +6,11 @@ import utils from '../utils'
 
 export default function $axios(options) {
     return new Promise((resolve, reject) => {
-        var baseURL = config.currentUrl.apiBase
+        var baseURL = config.apiBase
         let setConfig = {
             method: 'get',
             // 基础url前缀
-            baseUrl: config.currentUrl.apiBase,
+            baseUrl: config.apiBase,
             // 请求头信息
             headers: {
                 'Content-Type': 'application/json;charset=UTF-8',
@@ -27,7 +27,7 @@ export default function $axios(options) {
             responseType: 'json'
         }
         const instance = axios.create({
-            baseURL: baseURL,//config.baseUrl,
+            baseURL: config.baseUrl,
             headers: setConfig.headers,
             timeout: setConfig.timeout,
             withCredentials: true//config.withCredentials
@@ -35,7 +35,10 @@ export default function $axios(options) {
         // 添加请求拦截器
         instance.interceptors.request.use(
             function(config) {
-                debugger
+                let token = sessionStorage.getItem("token");
+                if (token) { 
+                    config.headers["X-Access-Token"] = token
+                }
                 config.headers['Content-Type'] = options.headers?options.headers['Content-Type']:config.headers['Content-Type']
                 if (config.method === 'post') {
                     config.data = {
@@ -59,13 +62,13 @@ export default function $axios(options) {
         // 添加响应拦截器
         instance.interceptors.response.use(
             function(response) {
-                //debugger
                 // console.log(response)
                 // 每一分钟更换一次token
                 /* let newAuth = response.headers['authorization']
                 if (newAuth !== undefined) {
                     sessionStorage.setItem('authorization', newAuth)
                 } */
+                //debugger
                 return response
             },
             function(error) {

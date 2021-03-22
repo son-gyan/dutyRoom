@@ -13,16 +13,16 @@
                 </el-input>
             </el-form-item>
             <el-form-item>
-                <el-input v-model="form.code" placeholder="验证码" class="codeInput">
+                <!-- <el-input v-model="form.code" placeholder="验证码" class="codeInput">
                     <i slot="prefix" class="el-input__icon el-icon-key"></i>
                     <template slot="append">
                         <img class="imgCode" :src="codeUrl" alt="" srcset="">
                     </template>
-                </el-input>
+                </el-input> -->
                 <el-checkbox v-model="form.checkedPwd" style="color:#fff">记住密码</el-checkbox>
             </el-form-item>
             <el-form-item>
-                <el-button type="primary" class="btnLogin" @click="onLogin">登录</el-button>
+                <el-button type="primary" class="btnLogin" @click.native="onLogin">登录</el-button>
             </el-form-item>
         </el-form>
     </div>
@@ -42,7 +42,23 @@ export default {
     },
     methods:{
         onLogin(){
-            this.$router.push('/index')
+            let params={
+                username:this.form.username,  //admin
+                password:this.form.password   // ljs12345
+            }
+            this.$api.common.login(params).then(res=>{
+                //debugger
+                if(res.data.code == 200){
+                    this.$store.dispatch('setToken', res.data.result.token)                
+                    this.$store.dispatch('setUserInfo', res.data.result.userInfo)                
+                    this.$store.dispatch('setParkInfo', res.data.result.park)                
+                    this.$router.push('/index')
+                }else{
+                    this.$message.error(res.data.message)
+                }
+            }).catch(error=>{
+                this.$message.error(error)
+            })
         }
     }
 }
@@ -89,6 +105,7 @@ export default {
            .el-input__inner{
                 background-color: transparent;
                 border-color:#03d4e3;
+                color:#fff;
             }
             .el-checkbox__input.is-checked .el-checkbox__inner{
                 background-color: transparent;

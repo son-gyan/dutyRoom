@@ -1,5 +1,6 @@
 // 导入自己需要的组件
-import { Select, Option, OptionGroup, Input, Tree, Dialog, Row, Col , Form, FormItem,Container,Main,Loading,Header,Footer,Switch,Card,Image,
+import Vue from 'vue'
+import { Select, Option, OptionGroup, Input, Tree, Dialog, Row, Col , Form, FormItem,Container,Main,Loading,Header,Footer,Switch,Card,Image,Tag,Pagination,Message,
     Checkbox,
     CheckboxButton,
     CheckboxGroup,
@@ -39,6 +40,9 @@ const element = {
     Vue.use(Avatar)
     Vue.use(Card)
     Vue.use(Image)
+    Vue.use(Tag)
+    Vue.use(Pagination)
   }
 }
+Vue.prototype.$message = Message;
 export default element

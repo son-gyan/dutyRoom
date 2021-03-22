@@ -14,5 +14,11 @@ if (env === 'production') {
   currentUrl = Object.assign(commonUrl, config)
 }
 export default {
+    baseUrl: config.apiBase,
+    // 请求头信息
+    headers: {
+        'Content-Type': 'application/json;charset=UTF-8',
+        'Access-Control-Allow-Credentials':true
+    },
     currentUrl
 }

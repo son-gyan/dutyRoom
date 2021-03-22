@@ -14,21 +14,18 @@
 		 *  "lh"   lh本地调试环境
 		 *  "dev-localDebug"  测试环境本地调试
 		 */
-		var environmentVariable = "ys"
+		var environmentVariable = "dev"
 		/* 下面是各环境变量 */
 		var externalConfig = {
 			apiBase: "",
 			staticUrl: "",
 			companyId: "",
-			imgBaseUrl: 'https://sixarms-dt.obs.cn-east-2.myhuaweicloud.com/'
+			imgBaseUrl: ''
 		}
 		if (environmentVariable == "dev") {
-			externalConfig.apiBase = 'http://139.9.121.98:9000/fsrmanage'
-			externalConfig.staticUrl = 'http://139.9.121.98'
-			externalConfig.companyId = "KHWU6" // "G1RU1" //
+			externalConfig.apiBase = 'http://beta.52tingche.com'
 		} else if (environmentVariable == "prod") {
-			externalConfig.apiBase = 'https://www.six-armscloud.com:9000/fsrmanage'
-			externalConfig.staticUrl = 'https://www.six-armscloud.com'
+			externalConfig.apiBase = 'http://52tingche.com'
 		}
 	</script>
 </head>

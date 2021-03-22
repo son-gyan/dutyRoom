@@ -273,7 +273,7 @@ export default {
                   this.formData.num1 = ''
                 }
             }else{
-                this.$toast(res.message);
+                this.$message.error(res.message);
             }
         }).catch((res) => {
             this.loading = false;
@@ -349,7 +349,7 @@ export default {
         plateLicense = this.plate_license_1
         plateLicense = this.palindrome(plateLicense)
         if (plateLicense.length < 7) {
-            this.$toast('请输入正确的车牌号')
+            this.$message.error('请输入正确的车牌号')
             return
         }
         this.$emit('getPlateLicense',plateLicense)
@@ -361,7 +361,7 @@ export default {
         plateLicense = this.plate_license_1
         plateLicense = this.palindrome(plateLicense)
         if (plateLicense.length < 7) {
-          alert('请输入正确的车牌号')
+          this.$message.error('请输入正确的车牌号')
           return
         }
       }
@@ -369,7 +369,7 @@ export default {
         plateLicense = this.plate_license_2
         plateLicense = this.palindrome(plateLicense)
         if (plateLicense.length < 8) {
-          alert('请输入正确的车牌号')
+          this.$message.error('请输入正确的车牌号')
           return
         }
       }

@@ -13,7 +13,7 @@
                             />
                         </section>
                         <div class="btnGroup">
-                            <el-button type="success" size="mini" @click="">开闸</el-button>
+                            <el-button type="success" size="mini" @click="openGate">开闸</el-button>
                             <el-button type="danger" size="mini" @click="">关闸</el-button>
                             <el-button type="primary" size="mini" @click="">手动入场</el-button>
                         </div>
@@ -34,7 +34,7 @@
                 <el-col :span="8">
                     <el-card class="elCard cardIssue">
                         <el-col :span="16">
-                            <plateNumber @getPlateLicense="getPlateLicense"  :noLabel='true'></plateNumber>
+                            <plateNumber @getPlateLicense="getPlateLicense"  :noLabel='true' :clickOutside="true"></plateNumber>
                             <el-form ref="form" :model="form" class="formIssue" size="small">
                                 <el-form-item label="无车牌：" label-width="80px">
                                     <el-input v-model="form.phone"></el-input>
@@ -63,8 +63,99 @@
             </el-col>
             <el-col :span="24">
                 <el-col :span="16">
-                    fs
+                    <div class="curPark">
+                        <span>当前车场：</span>
+                        <span><i class="elIcon el-icon-location"></i>枝江市</span>
+                        <span><i class="elIcon el-icon-s-home"></i>枝江集团</span>
+                        <span><i class="elIcon el-icon-s-shop"></i>分公司测试分公司</span> 
+                        <span><i class="elIcon el-icon-menu"></i>枝江停车场项目</span>
+                        <span>切换<i class="el-icon-sort elIconSort"></i></span>
+                    </div>
+                    <div class="tag">
+                        <el-tag effect="plain" size="small"><i class="el-icon-arrow-left"></i></el-tag>
+                        <el-tag effect="dark" size="small">出口1</el-tag>
+                        <el-tag effect="dark" size="small">出口2</el-tag>
+                        <el-tag effect="dark" size="small">出口3</el-tag>
+                        <el-tag effect="dark" size="small">出口4</el-tag>
+                        <el-tag effect="dark" size="small">出口5</el-tag>
+                        <el-tag effect="dark" size="small">入口1</el-tag>
+                        <el-tag effect="dark" size="small">入口2</el-tag>
+                        <el-tag effect="dark" size="small">入口3</el-tag>
+                        <el-tag effect="dark" size="small">入口4</el-tag>
+                        <el-tag effect="dark" size="small">入口5</el-tag>
+                        <el-tag effect="plain" size="small"><i class="el-icon-arrow-right"></i></el-tag>
+                    </div>
+                    <div class="table">
+                        <el-table :data="tableData.list.filter(data => !searchVal || data.carNum.includes(searchVal))" style="width: 100%">
+                            <el-table-column prop="inTime" label="进场时间" width="180" align="center"></el-table-column>
+                            <el-table-column prop="carNum" label="车牌" width="180"  align="center">
+                                <template slot="header">
+                                    <el-input
+                                        v-model="searchVal"
+                                        size="mini"
+                                        placeholder="搜索车牌"/>
+                                </template>
+                                <template slot-scope="scope">
+                                    <span>{{scope.row.carNum}}</span>
+                                </template>
+                            </el-table-column>
+                            <el-table-column prop="parkName" label="车场名称" align="center"></el-table-column>
+                            <el-table-column prop="laneName" label="车道名称" align="center"></el-table-column>
+                            <el-table-column label="操作" align="center">
+                                <template slot-scope="scope">
+                                    <el-button size="mini" @click="handleOut(scope.$index, scope.row)">手动出场</el-button>
+                                </template>
+                            </el-table-column>
+                        </el-table>
+                        <div class="fenye">
+                            <el-pagination
+                                background
+                                @current-change="handleCurrentChange"
+                                :current-page="params.pageNum"
+                                :page-size="100"
+                                layout="total, prev, pager, next, jumper"
+                                :total="tableData.records == ''? 0: tableData.records"
+                            >
+                            </el-pagination>
+                        </div>
+                    </div>
                 </el-col>
+                <el-col :span="8" class="elCol">
+                    <h3>出口异常车辆列表</h3>
+                    <p class="sup">今日已处理：15条 待处理：2条</p>
+                    <div class="table">
+                        <el-table :data="anomalyTableData.list.filter(data => !searchVal || data.carNum.includes(searchVal))" style="width: 100%">
+                            <el-table-column prop="carNum" label="车牌号码" width="100"  align="center">
+                                <template slot="header">
+                                    <el-input
+                                        v-model="searchVal"
+                                        size="mini"
+                                        placeholder="搜索车牌"/>
+                                </template>
+                            </el-table-column>
+                            <el-table-column prop="parkName" label="车场名称" align="center"></el-table-column>
+                            <el-table-column prop="laneName" label="车道名称" align="center"></el-table-column>
+                            <el-table-column prop="status" label="状态" align="center"></el-table-column>
+                            <el-table-column label="操作" align="center">
+                                <template slot-scope="scope">
+                                    <el-button size="mini" @click="handleAnomaly(scope.$index, scope.row)">已处理</el-button>
+                                </template>
+                            </el-table-column>
+                        </el-table>
+                        <div class="fenye">
+                            <el-pagination
+                                background
+                                @current-change="handleCurrentChangeAnomaly"
+                                :current-page="params.pageNum"
+                                :page-size="100"
+                                layout="total, prev, pager, next, jumper"
+                                :total="tableData.records == ''? 0: tableData.records"
+                            >
+                            </el-pagination>
+                        </div>
+                    </div>
+                </el-col>
+                
             </el-col>
         </el-row>
         
@@ -118,16 +209,108 @@ export default {
             form:{
                 carNum:"",
                 phone:"15488886666",
+            },
+            searchVal:"",
+            params:{
+                pageNum:1,
+                pageSize:10
+            },
+            tableData:{
+                records:0,
+                list:[
+                    {
+                        inTime:"2021-02-01 15:56:32",
+                        carNum:"鄂E78651",
+                        parkName:"新天地电脑城",
+                        laneName:"入口1"
+                    },
+                    {
+                        inTime:"2021-02-01 15:50:24",
+                        carNum:"鄂E4399A",
+                        parkName:"机电花苑二区",
+                        laneName:"入口1"
+                    },
+                    {
+                        inTime:"2021-02-01 15:40:01",
+                        carNum:"15542365874",
+                        parkName:"机电花苑一区",
+                        laneName:"入口1"
+                    },
+                    {
+                        inTime:"2021-02-01 15:30:24",
+                        carNum:"15549393491",
+                        parkName:"机电花苑二区",
+                        laneName:"入口1"
+                    }
+                ]
+            },
+            paramsAnomaly:{
+                pageNum:1,
+                pageSize:10
+            },
+            anomalyTableData:{
+                records:0,
+                list:[
+                    {
+                        carNum:"鄂E78651",
+                        parkName:"新天地电脑城",
+                        laneName:"出口3",
+                        status:0
+                    },
+                    {
+                        carNum:"鄂E78651",
+                        parkName:"新天地电脑城",
+                        laneName:"出口3",
+                        status:0
+                    }
+                ]
             }
+
         }
     },
     created(){
     },
     methods:{
+        // 开闸
+        openGate(){
+
+        },
+        // 关闸
+        closeGate(){
+
+        },
+        // 手动开闸
+        manualGate(){
+
+        },
         getPlateLicense(data){
             console.log(data,"carNum")
             this.form.carNum = data
         },
+        //分页页码切换
+        handleCurrentChange(val) {
+            this.params.pageNum = val;
+            this.getList();
+        },
+        getList(){
+
+        },
+        //手动出场
+        handleOut(){
+
+        },
+        //分页页码切换
+        handleCurrentChangeAnomaly(val) {
+            this.paramsAnomaly.pageNum = val;
+            this.getAnomalyList();
+        },
+        getAnomalyList(){
+
+        },
+        // 异常处理
+        handleAnomaly(index,row){
+
+        }
     }
 }
 </script>
@@ -164,7 +347,39 @@ export default {
             .elFormItemFooter{
                 text-align: center;
             }
+            
         }
-        
+        .curPark{
+            .elIcon{
+                margin-left:5px;
+                color:#3485EC;
+            }
+            .elIconSort{
+                padding: 5px 2px;
+                margin-left: 5px;
+                transform: rotate(90deg);
+                background-color: #3485EC;
+                color: #fff;
+                border-radius: 3px;
+            }
+        }
+        /deep/ .tag{
+            margin-top:10px;
+            .el-tag{
+                cursor: pointer;
+            }
+        }
+        /deep/ .table{
+            margin-top:20px;
+        }
+        .elCol{
+            text-align: center;
+            .sup{
+                margin-top: 15px;
+            }
+            .fenye{
+                text-align: left; 
+            }
+        }
     }
 </style>

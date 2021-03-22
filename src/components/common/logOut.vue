@@ -4,11 +4,11 @@
             <el-avatar :size="40" class="pointer">
                 <img src="https://cube.elemecdn.com/e/fd/0fc7d20532fdaf769a25683617711png.png"/>
             </el-avatar>
-            <span class="username">admin</span>
+            <span class="username">{{userInfo.username}}</span>
             <img class="settingImg" src="../../assets/images/iconfont-setting.png" @click="jumpTo"  v-show="!showTag" /> 
             <img class="pointer" src="../../assets/images/signOut.png" @click="dialogVisible = true" />
         </div>
-        <p class="time">2020年12月23日 12:23:36</p>
+        <p class="time">{{userInfo.updateTime}}</p>
         <div class="logOut">
             <el-dialog :close-on-click-modal="dialogClose" title="提示" :visible.sync="dialogVisible" width="30%">
                 <span style="padding-left:20px">确定退出当前用户？</span>
@@ -22,7 +22,7 @@
     </div>
 </template>
 <script>
-import { mapState, mapGetters} from 'vuex'
+import { mapGetters } from "vuex"
 export default {
     props: {
         showTag:{
@@ -44,22 +44,7 @@ export default {
             this.$router.push('/setting')
         },
         loginOut(){
-            this.$api.common.loginOut().then((res)=>{
-                if (res.data.resCode == 0) {
-                    debugger
-                    top.window.location.href=res.data.data;
-                } else {
-                    this.$message({
-                        message: res.data.resMsg,//this.$t('message.addFail'),
-                        type: "error"
-                    });
-                }
-            }).catch((res) => {
-                this.$message({
-                    message: res.message,
-                    type: 'error'
-                })
-            });
+            this.$router.push('/login')
         }
     }
 }
