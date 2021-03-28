@@ -14,8 +14,8 @@
                         </section>
                         <div class="btnGroup">
                             <el-button type="success" size="mini" @click="openGate">开闸</el-button>
-                            <el-button type="danger" size="mini" @click="">关闸</el-button>
-                            <el-button type="primary" size="mini" @click="">手动入场</el-button>
+                            <el-button type="danger" size="mini" @click="closeGate">关闸</el-button>
+                            <el-button type="primary" size="mini" @click="manualGate">手动入场</el-button>
                         </div>
                     </el-card>
                 </el-col>
@@ -65,11 +65,11 @@
                 <el-col :span="16">
                     <div class="curPark">
                         <span>当前车场：</span>
-                        <span><i class="elIcon el-icon-location"></i>枝江市</span>
-                        <span><i class="elIcon el-icon-s-home"></i>枝江集团</span>
-                        <span><i class="elIcon el-icon-s-shop"></i>分公司测试分公司</span> 
-                        <span><i class="elIcon el-icon-menu"></i>枝江停车场项目</span>
-                        <span>切换<i class="el-icon-sort elIconSort"></i></span>
+                        <span><i class="elIcon el-icon-location"></i>{{parkInfo.parentList[0].departName}}</span>
+                        <span><i class="elIcon el-icon-s-home"></i>{{parkInfo.parentList[1].departName}}</span>
+                        <span><i class="elIcon el-icon-s-shop"></i>{{parkInfo.parentList[2].departName}}</span> 
+                        <span><i class="elIcon el-icon-menu"></i>{{parkInfo.departName}}</span>
+                        <span @click="handleChangeProject">切换<i class="el-icon-sort elIconSort"></i></span>
                     </div>
                     <div class="tag">
                         <el-tag effect="plain" size="small"><i class="el-icon-arrow-left"></i></el-tag>
@@ -86,14 +86,15 @@
                         <el-tag effect="plain" size="small"><i class="el-icon-arrow-right"></i></el-tag>
                     </div>
                     <div class="table">
-                        <el-table :data="tableData.list.filter(data => !searchVal || data.carNum.includes(searchVal))" style="width: 100%">
+                        <el-table :data="tableData.list.filter(data => !search || data.carNum.includes(search))" style="width: 100%">
                             <el-table-column prop="inTime" label="进场时间" width="180" align="center"></el-table-column>
                             <el-table-column prop="carNum" label="车牌" width="180"  align="center">
-                                <template slot="header">
+                                <template #header>
                                     <el-input
-                                        v-model="searchVal"
+                                        v-model="search"
                                         size="mini"
-                                        placeholder="搜索车牌"/>
+                                        placeholder="搜索车牌">
+                                    </el-input>
                                 </template>
                                 <template slot-scope="scope">
                                     <span>{{scope.row.carNum}}</span>
@@ -126,7 +127,7 @@
                     <div class="table">
                         <el-table :data="anomalyTableData.list.filter(data => !searchVal || data.carNum.includes(searchVal))" style="width: 100%">
                             <el-table-column prop="carNum" label="车牌号码" width="100"  align="center">
-                                <template slot="header">
+                                <template #header>
                                     <el-input
                                         v-model="searchVal"
                                         size="mini"
@@ -158,7 +159,15 @@
                 
             </el-col>
         </el-row>
-        
+        <el-dialog
+            title="提示"
+            :visible.sync="projectDialogVisible"
+            width="30%">
+            <el-cascader :options="chechangTree" v-model="formInline"  @change="handleSelect"></el-cascader>
+            <span slot="footer" class="dialog-footer">
+                <el-button type="primary" @click="changeAsyncOK('formInline')">确 定</el-button>
+            </span>
+        </el-dialog>
     </div>
 </template>
 <script>
@@ -167,6 +176,7 @@ import 'vue-video-player/src/custom-theme.css'
 import { videoPlayer } from 'vue-video-player'
 import 'videojs-flash'
 import plateNumber from '@/components/common/plateNumber'
+import { mapGetters } from "vuex"
 export default {
     components: {
         videoPlayer,
@@ -207,9 +217,11 @@ export default {
             },
             qrImg:require("../../assets/images/codePic.png"),
             form:{
+                depId:'',
                 carNum:"",
                 phone:"15488886666",
             },
+            search:"",
             searchVal:"",
             params:{
                 pageNum:1,
@@ -262,13 +274,37 @@ export default {
                         parkName:"新天地电脑城",
                         laneName:"出口3",
                         status:0
+                    },
+                    {
+                        carNum:"鄂E34556",
+                        parkName:"新天地电脑城",
+                        laneName:"出口3",
+                        status:0
                     }
                 ]
-            }
-
+            },
+            cityId:'',
+            groupId:'',
+            companyId:'',
+            xParkId:'',
+            projectDialogVisible:false,
+            // 选中的id
+            formInline: [],
+            //   选中的对象
+            selectObj: [],
+            chechangTree: []
         }
     },
+    computed: {
+        ...mapGetters(["userInfo",'parkInfo'])
+    },
     created(){
+        console.log(this.parkInfo,'parkInfo')
+        this.form.depId = this.parkInfo.id
+        this.cityId = this.parkInfo.parentList[0].id
+        this.groupId = this.parkInfo.parentList[1].id
+        this.companyId = this.parkInfo.parentList[2].id
+        this.xParkId = this.form.depId
     },
     methods:{
         // 开闸
@@ -281,6 +317,60 @@ export default {
         },
         // 手动开闸
         manualGate(){
+
+        },
+        //项目切换
+        handleChangeProject(){
+            this.getOrgTree()
+        },
+        // 获取组织机构树
+        getOrgTree(){
+            this.$api.home.getTree().then(res=>{
+                //debugger
+                if(res.data.code == 200){
+                    let resultArry = res.data.result
+                    if (resultArry && resultArry.length) {
+                        for (let i = 0; i < resultArry.length; i++) {
+                            resultArry[i].label = resultArry[i].title
+                            resultArry[i].value = resultArry[i].id
+                            if (resultArry[i].children && resultArry[i].children.length) {
+                                for (let j = 0; j < resultArry[i].children.length; j++) {
+                                    resultArry[i].children[j].label = resultArry[i].children[j].title
+                                    resultArry[i].children[j].value = resultArry[i].children[j].id
+                                    if (resultArry[i].children[j].children && resultArry[i].children[j].children.length) {
+                                        for (let p = 0; p < resultArry[i].children[j].children.length; p++) {
+                                            resultArry[i].children[j].children[p].label = resultArry[i].children[j].children[p].title
+                                            resultArry[i].children[j].children[p].value = resultArry[i].children[j].children[p].id
+                                            if (resultArry[i].children[j].children[p].children && resultArry[i].children[j].children[p].children.length) {
+                                                for (let k = 0; k < resultArry[i].children[j].children[p].children.length; k++) {
+                                                    resultArry[i].children[j].children[p].children[k].label = resultArry[i].children[j].children[p].children[k].title
+                                                    resultArry[i].children[j].children[p].children[k].value = resultArry[i].children[j].children[p].children[k].id
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        } 
+                        console.log(resultArry,'getTree')                                        
+                        this.chechangTree = resultArry
+                    }   
+                    this.formInline = [this.cityId, this.groupId, this.companyId, this.xParkId]
+                    this.projectDialogVisible = true
+                }else{
+                    this.$message.error(res.data.message)
+                }
+            }).catch(error=>{
+                this.$message.error(error)
+            })
+        },
+        handleSelect (value, selectedData) {
+            if (selectedData) {
+                this.selectObj = selectedData
+            }
+        },
+        //项目确认
+        changeAsyncOK(formInline){
 
         },
         getPlateLicense(data){

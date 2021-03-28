@@ -15,6 +15,9 @@ export default {
         },
         token(state){
             return state.token
+        },
+        parkInfo(state){
+            return state.parkInfo
         }
     },
     mutations: {

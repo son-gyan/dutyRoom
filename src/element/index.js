@@ -1,7 +1,7 @@
 // 导入自己需要的组件
 import Vue from 'vue'
 import { Select, Option, OptionGroup, Input, Tree, Dialog, Row, Col , Form, FormItem,Container,Main,Loading,Header,Footer,Switch,Card,Image,Tag,Pagination,Message,
-    Checkbox,
+    Checkbox,Cascader,
     CheckboxButton,
     CheckboxGroup,
     DatePicker,
@@ -42,6 +42,7 @@ const element = {
     Vue.use(Image)
     Vue.use(Tag)
     Vue.use(Pagination)
+    Vue.use(Cascader)
   }
 }
 Vue.prototype.$message = Message;

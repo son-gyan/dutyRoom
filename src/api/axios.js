@@ -30,7 +30,7 @@ export default function $axios(options) {
             baseURL: config.baseUrl,
             headers: setConfig.headers,
             timeout: setConfig.timeout,
-            withCredentials: true//config.withCredentials
+            withCredentials: false//config.withCredentials
         });
         // 添加请求拦截器
         instance.interceptors.request.use(
